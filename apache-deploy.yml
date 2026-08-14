@@ -1,0 +1,4 @@
+ - name: Deploy Apache Website
+   host: rhel_ server
+   become: true
+
