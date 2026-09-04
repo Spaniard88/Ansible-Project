@@ -1,4 +1,46 @@
- - name: Deploy Apache Website
-   host: rhel_ server
-   become: true
+- name: Deploy Apache website on RHEL 9
+  hosts: webservers
+  become: true
 
+  vars:
+    website_title: "My Apache Website"
+    website_message: "Deployed using Ansible"
+
+  tasks:
+
+    - name: Install Apache
+      ansible.builtin.dnf:
+        name: httpd
+        state: present
+		
+    - name: Copy file with owner and permissions
+      ansible.builtin.copy:
+        src: "/ansible-project/'Git repo'/config/Seans_Website_Ver1.html"
+        dest: "/var/www/html/index.html"
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Ensure Apache is enabled and running
+      ansible.builtin.service:
+        name: httpd
+        state: started
+        enabled: true
+
+    - name: Ensure firewalld is installed
+      ansible.builtin.dnf:
+        name: firewalld
+        state: present
+
+    - name: Ensure firewalld is running
+      ansible.builtin.service:
+        name: firewalld
+        state: started
+        enabled: true
+
+    - name: Allow HTTP through firewall
+      ansible.posix.firewalld:
+        service: http
+        permanent: true
+        state: enabled
+        immediate: true
