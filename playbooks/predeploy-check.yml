@@ -1,0 +1,42 @@
+- name: Predeploy Checks
+  hosts: webservers
+  become: true
+
+  tasks:
+
+    - name: Check CPU usage is below 90%
+      shell: |
+        top -bn1 | grep "Cpu(s)" | awk '{print 100 - $8}'
+      register: cpu_usage
+      changed_when: false
+
+    - name: Fail if CPU usage is 90% or higher
+      fail:
+        msg: "CPU usage is {{ cpu_usage.stdout }}%, which exceeds the 90% threshold."
+      when: cpu_usage.stdout | float >= 90
+
+    - name: Check root filesystem free space
+      shell: |
+        df -h / | awk 'NR==2 {gsub("%","",$5); print 100-$5}'
+      register: disk_free
+      changed_when: false
+
+    - name: Fail if free disk space is below 10%
+      fail:
+        msg: "Free disk space is {{ disk_free.stdout }}%, which is below the 10% threshold."
+      when: disk_free.stdout | int < 10
+
+    - name: Check internet connectivity
+      uri:
+        url: https://www.redhat.com/en
+        method: GET
+        status_code: 200
+        timeout: 10
+      register: internet_check
+
+    - name: Display success message
+      debug:
+        msg:
+          - "CPU usage: {{ cpu_usage.stdout }}%"
+          - "Free disk space: {{ disk_free.stdout }}%"
+          - "Internet connectivity check passed."
