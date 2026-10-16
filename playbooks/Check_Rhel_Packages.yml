@@ -1,0 +1,13 @@
+- name: Install required packages
+  hosts: rhel_servers
+  gather_facts: false
+  become: true
+
+  tasks:
+     - name: Ensure packages are installed
+       ansible.builtin.dnf:
+         name:
+           - git
+           - vim
+           - wget
+         state: present
