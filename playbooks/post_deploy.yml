@@ -1,0 +1,38 @@
+- name: Post-deployment checks
+  hosts: webservers
+  become: true
+
+  tasks:
+
+    - name: Gather service information
+      ansible.builtin.service_facts:
+
+    - name: Verify Apache is running
+      ansible.builtin.assert:
+        that:
+          - ansible_facts.services['httpd.service'].state == 'running'
+        fail_msg: "Post-deployment check failed - Apache is not running."
+        success_msg: "Apache service is running successfully."
+
+    - name: Check website is accessible
+      ansible.builtin.uri:
+        url: http://localhost
+        method: GET
+        status_code: 200
+        return_content: true
+        timeout: 10
+      register: website_check
+
+    - name: Verify website returned HTTP 200
+      ansible.builtin.assert:
+        that:
+          - website_check.status == 200
+        fail_msg: "Post-deployment check failed - website is not accessible."
+        success_msg: "Website returned HTTP 200 successfully."
+
+    - name: Display post-deployment results
+      ansible.builtin.debug:
+        msg:
+          - "Apache service: Running"
+          - "Website HTTP status: {{ website_check.status }}"
+          - "Post-deployment validation completed successfully."
