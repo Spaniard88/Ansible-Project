@@ -1,0 +1,11 @@
+- name: Clone GitHub repository
+  hosts: localhost
+  become: yes
+
+  tasks:
+    - name: Clone Repository
+      ansible.builtin.git:
+        repo: "https://github.com/Spaniard88/Ansible-Project"
+        dest: "/ansible-project/Git repo"
+        version: main
+
