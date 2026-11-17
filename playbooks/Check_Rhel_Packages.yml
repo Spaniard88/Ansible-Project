@@ -1,5 +1,5 @@
 - name: Install required packages
-  hosts: rhel_servers
+  hosts: websevers
   gather_facts: false
   become: true
 

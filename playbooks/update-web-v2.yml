@@ -1,0 +1,13 @@
+- name: Update Sean's website to Version 2
+  hosts: webservers
+  become: true
+
+  tasks:
+
+    - name: Deploy Version 2 website
+      ansible.builtin.copy:
+        src: "/ansible-project/Git repo/config/Seans_Website_Ver2.html"
+        dest: "/var/www/html/index.html"
+        owner: root
+        group: root
+        mode: '0644'

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+	  <html>
+	  <head>
+		  <title> Sean's Website Ver:2 </title>
+	  </head>
+	  <body>
+		  <h1 id="welcomeMessage">Welcome to Sean's Website</h1>
+
+		  <label for="messageSelect">Choose a message:</label>
+
+		  <select id="messageSelect" onchange="changeMessage()">
+			      <option value="Welcome to Sean's Website">Welcome</option>
+				          <option value="Goodbye from Sean's Website">Goodbye</option>
+		  </select>
+
+				  <script>
+					      function changeMessage() {
+												        const selectedMessage =
+													            document.getElementById("messageSelect").value;
+
+												        document.getElementById("welcomeMessage").textContent =
+													            selectedMessage;
+												    }
+				  </script>
+	  </body>
+	  </html>

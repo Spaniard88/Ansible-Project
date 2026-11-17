@@ -1,0 +1,5 @@
+ apache_package: httpd
+ apache_service: httpd
+ website_destination: /var/www/html/index.html
+ website_file: Seans_Website_Ver2.html
+ firewall_service: http
